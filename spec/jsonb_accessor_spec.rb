@@ -167,6 +167,19 @@ RSpec.describe JsonbAccessor do
       end
     end
 
+    context "method_name" do
+      let(:klass) do
+        build_class(foo: [:string, default: "bar", method_name: "bar"])
+      end
+
+      it "access with provided method_name" do
+        expect(instance.bar).to eq "bar"
+        instance.bar = "foo"
+        expect(instance.bar).to eq "foo"
+        expect(instance.options).to eq("foo" => "foo")
+      end
+    end
+
     context "dirty tracking" do
       let(:default_class) do
         Class.new(ActiveRecord::Base) do
