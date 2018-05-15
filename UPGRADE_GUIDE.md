@@ -30,6 +30,22 @@ class Product < ActiveRecord::Base
 end
 ```
 
+Normally, a database record contains `id` that will conflict with `id` in a jsonb field. In 1.0.1 you would write as below to remove the conflict:
+In 1.0.1 you would write 
+
+```ruby
+class Product < ActiveRecord::Base
+  jsonb_accessor :data,
+    id: [:string, method_name: '_id'],
+    count: :value, # all fields must specify a type
+    title: :string,
+    external_id: :integer,
+    reviewed_at: :datetime, # `:date_time` is now `:datetime`
+    previous_rankings: [:integer, array: true], # now just the type followed by `array: true`
+    external_rankings: [:value, array: true] # now the value type is specified as well as `array: true`
+end
+```
+
 There are several important differences. All fields must now specify a type, `:date_time` is now `:datetime`, and arrays are specified using a type and `array: true` instead of `type_array`.
 
 Also, in order to use the `value` type you need to register it:
